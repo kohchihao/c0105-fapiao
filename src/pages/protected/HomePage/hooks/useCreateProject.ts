@@ -8,6 +8,7 @@ import queryClient from '../../../../utils/reactQuery';
 
 type UseCreateProjectParams = {
   closeModal: () => void;
+  resetForm: () => void;
 };
 const useCreateProject = (params: UseCreateProjectParams) => {
   return useMutation({
@@ -15,9 +16,11 @@ const useCreateProject = (params: UseCreateProjectParams) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['projects'] });
       params.closeModal();
+      params.resetForm();
     },
     onError: (error) => {
       params.closeModal();
+      params.resetForm();
       notifications.show({
         color: 'red',
         title: 'Error creating new project',

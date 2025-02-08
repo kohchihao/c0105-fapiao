@@ -12,8 +12,6 @@ const schema = z.object({
 
 const useCreateProjectModal = () => {
   const [opened, { open, close }] = useDisclosure(false);
-  const create = useCreateProject({ closeModal: close });
-
   const form = useForm({
     mode: 'uncontrolled',
     initialValues: {
@@ -21,6 +19,12 @@ const useCreateProjectModal = () => {
     },
     validate: zodResolver(schema),
   });
+
+  const resetForm = () => {
+    form.reset();
+  };
+
+  const create = useCreateProject({ closeModal: close, resetForm });
 
   const onOpenCreateProjectModal = () => {
     open();

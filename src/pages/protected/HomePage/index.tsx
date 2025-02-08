@@ -16,11 +16,11 @@ import ServerError from '../../../components/ServerError';
 import useHomePageViewModel from './viewModel';
 
 const HomePage = () => {
-  const { projects, isError, isLoading, createProjectModal } =
+  const { projects, isError, isLoading, createProjectModal, onProjectClick } =
     useHomePageViewModel();
 
   const rows = projects.map((element) => (
-    <Table.Tr key={element.id}>
+    <Table.Tr key={element.id} onClick={() => onProjectClick(element.id)}>
       <Table.Td>{element.name}</Table.Td>
       <Table.Td>{element.total_revenue}</Table.Td>
       <Table.Td>{element.total_payment_owed}</Table.Td>

@@ -1,7 +1,7 @@
 import supabase from '../utils/supabase';
 import { getUserId } from './utils';
 
-type CreateProjectParams = {
+export type CreateProjectParams = {
   name: string;
 };
 
@@ -9,11 +9,7 @@ export const createProject = async (params: CreateProjectParams) => {
   const user_id = await getUserId();
 
   if (!user_id) {
-    return {
-      success: false,
-      error: 'user_id not found',
-      data: [],
-    };
+    throw new Error('User id not found');
   }
 
   const { error, data } = await supabase
@@ -27,17 +23,11 @@ export const createProject = async (params: CreateProjectParams) => {
 
   if (error) {
     console.error('error', error);
-    return {
-      success: false,
-      error,
-    };
+    throw new Error(error.message);
   }
 
   console.log('Inserted data:', data);
-  return {
-    success: true,
-    data,
-  };
+  return data;
 };
 
 export const updateProject = () => {};

@@ -1,22 +1,23 @@
 import {
   Button,
   Container,
+  Group,
+  Modal,
   Paper,
   Stack,
   Table,
   Text,
+  TextInput,
   Title,
 } from '@mantine/core';
 import dayjs from 'dayjs';
 import FullPageLoader from '../../../components/FullPageLoader';
 import ServerError from '../../../components/ServerError';
-import useProjects from './hooks/useProjects';
+import useHomePageViewModel from './viewModel';
 
 const HomePage = () => {
-  // TODO:
-  // 1. create modal to create a customer.
-  // 2. shift all the logic into hook.
-  const { data: projects = [], isError, isLoading } = useProjects();
+  const { projects, isError, isLoading, createProjectModal } =
+    useHomePageViewModel();
 
   const rows = projects.map((element) => (
     <Table.Tr key={element.id}>
@@ -40,12 +41,14 @@ const HomePage = () => {
   return (
     <Container px={0}>
       <Stack justify="center">
-        <Title order={1}>Customers</Title>
+        <Title order={1}>Projects</Title>
         <Text c="dimmed">
-          A customer have many invoices. Create a customer now to get started.
+          A project have many invoices. Create a project now to get started.
         </Text>
         <div>
-          <Button>Create customer</Button>
+          <Button onClick={createProjectModal.onOpenCreateProjectModal}>
+            Create project
+          </Button>
         </div>
 
         <Table.ScrollContainer minWidth={500}>
@@ -53,7 +56,7 @@ const HomePage = () => {
             <Table highlightOnHover>
               <Table.Thead>
                 <Table.Tr>
-                  <Table.Th>Customer Name</Table.Th>
+                  <Table.Th>Project Name</Table.Th>
                   <Table.Th>Total Revenue</Table.Th>
                   <Table.Th>Total Payment Owed</Table.Th>
                   <Table.Th>Created At</Table.Th>
@@ -64,6 +67,53 @@ const HomePage = () => {
           </Paper>
         </Table.ScrollContainer>
       </Stack>
+
+      <Modal
+        opened={createProjectModal.opened}
+        onClose={createProjectModal.onClose}
+        title="Create Project"
+        centered
+      >
+        {/* Modal content */}
+        <form
+          onSubmit={createProjectModal.form.onSubmit(
+            createProjectModal.onCreate
+          )}
+        >
+          <Stack gap="lg">
+            <TextInput
+              label="Project Name"
+              description="An easily identifiable name for the project"
+              placeholder="John Doe"
+              required
+              withAsterisk
+              disabled={createProjectModal.create.isPending}
+              key={createProjectModal.form.key('projectName')}
+              {...createProjectModal.form.getInputProps('projectName')}
+            />
+
+            <Group justify="space-between">
+              <Button
+                color="blue"
+                variant="default"
+                flex={1}
+                onClick={createProjectModal.onClose}
+              >
+                Cancel
+              </Button>
+
+              <Button
+                color="blue"
+                flex={1}
+                type="submit"
+                loading={createProjectModal.create.isPending}
+              >
+                Create
+              </Button>
+            </Group>
+          </Stack>
+        </form>
+      </Modal>
     </Container>
   );
 };

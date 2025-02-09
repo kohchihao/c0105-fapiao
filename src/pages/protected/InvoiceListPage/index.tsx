@@ -1,11 +1,63 @@
-import { useParams } from 'react-router-dom';
+import {
+  Button,
+  Container,
+  Paper,
+  Stack,
+  Table,
+  Text,
+  Title,
+} from '@mantine/core';
+import dayjs from 'dayjs';
+import FullPageLoader from '../../../components/FullPageLoader';
+import ServerError from '../../../components/ServerError';
+import useInvoiceListPageViewModel from './viewModel';
 
 const InvoiceListPage = () => {
-  const { projectId } = useParams();
+  const { invoices, isLoading, isError } = useInvoiceListPageViewModel();
+
+  const rows = invoices.map((element) => (
+    <Table.Tr key={element.id}>
+      <Table.Td>{element.invoice_sn}</Table.Td>
+      <Table.Td>{element.description}</Table.Td>
+      <Table.Td>
+        {dayjs(element.created_at).format('DD/MM/YYYY HH:mm')}
+      </Table.Td>
+    </Table.Tr>
+  ));
+
+  if (isLoading) {
+    return <FullPageLoader />;
+  }
+
+  if (isError) {
+    return <ServerError />;
+  }
+
   return (
-    <div>
-      <h1>Invoice List Page {projectId}</h1>
-    </div>
+    <Container px={0}>
+      <Stack justify="center">
+        <Title order={1}>Invoices</Title>
+        <Text c="dimmed">A list of invoices belonging to the project.</Text>
+        <div>
+          <Button>Create invoice</Button>
+        </div>
+
+        <Table.ScrollContainer minWidth={500}>
+          <Paper withBorder>
+            <Table highlightOnHover>
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th>Invoice Serial No.</Table.Th>
+                  <Table.Th>Description</Table.Th>
+                  <Table.Th>Created At</Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>{rows}</Table.Tbody>
+            </Table>
+          </Paper>
+        </Table.ScrollContainer>
+      </Stack>
+    </Container>
   );
 };
 

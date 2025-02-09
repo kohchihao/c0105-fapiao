@@ -25,7 +25,7 @@ const invoiceSchema = z.object({
     .string()
     .nonempty({ message: 'Invoice serial number is required' }),
   raised_date: z.date({ required_error: 'Raised date is required' }),
-  description: z.string().optional(),
+  description: z.string().nonempty({ message: 'Description is required' }),
   comment: z.string().optional(),
   items: z.array(itemSchema),
 });
@@ -75,11 +75,30 @@ const useCreateInvoicePageViewModel = () => {
     return 'draft';
   };
 
+  const onSaveInvoice = (values: {
+    client_company_name: string;
+    client_person_in_charge: string;
+    address: string;
+    phone_number: string;
+    invoice_sn: string;
+    raised_date: Date;
+    description: string;
+    comment: string;
+    items: {
+      description: string;
+      quantity: number;
+      unit_price: number;
+    }[];
+  }) => {
+    console.log(values);
+  };
+
   return {
     form,
     onAddLineItem,
     onDeleteLineItem,
     formStatus: getFormStatus(),
+    onSaveInvoice,
   };
 };
 

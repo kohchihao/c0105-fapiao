@@ -12,6 +12,7 @@ import {
   TextInput,
 } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
+
 import {
   IconDeviceFloppy,
   IconDownload,
@@ -20,6 +21,7 @@ import {
 } from '@tabler/icons-react';
 import { formatCurrency } from '../../../utils/currency';
 import FormStatus from './components/FormStatus';
+import PreviewInvoice from './components/PreviewInvoice';
 import useCreateInvoicePageViewModel from './viewModel';
 
 const CreateInvoicePage = () => {
@@ -197,6 +199,8 @@ const CreateInvoicePage = () => {
             Delete Invoice
           </Button> */}
           </Group>
+
+          <PreviewInvoice />
         </Stack>
       </form>
     </Container>

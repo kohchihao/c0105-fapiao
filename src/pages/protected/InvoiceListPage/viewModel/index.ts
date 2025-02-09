@@ -1,20 +1,32 @@
-import { useParams } from 'react-router-dom';
+import { useMemo } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import useInvoices from '../hooks/useInvoices';
 
 const useInvoiceListPageViewModel = () => {
-  const { projectId } = useParams();
+  const navigate = useNavigate();
+  const { projectId: paramProjectId } = useParams();
+
+  const projectId = useMemo(() => {
+    return isNaN(Number(paramProjectId)) ? 0 : Number(paramProjectId);
+  }, [paramProjectId]);
+
   const {
     data: invoices = [],
     isError,
     isLoading,
   } = useInvoices({
-    projectId: isNaN(Number(projectId)) ? 0 : Number(projectId),
+    projectId,
   });
+
+  const onCreateInvoice = () => {
+    navigate(`/app/project/${projectId}/invoice/create`);
+  };
 
   return {
     invoices,
     isError,
     isLoading,
+    onCreateInvoice,
   };
 };
 

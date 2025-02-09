@@ -5,6 +5,7 @@ import AuthProtectedRoute from './AuthProtectedRoute.tsx';
 
 import { ROUTES } from '../constants/index.ts';
 import NotFoundPage from '../pages/NotFoundPage/index.tsx';
+import CreateInvoicePage from '../pages/protected/CreateInvoicePage/index.tsx';
 import ProtectedHomePage from '../pages/protected/HomePage/index.tsx';
 import InvoiceListPage from '../pages/protected/InvoiceListPage/index.tsx';
 import HomePage from '../pages/public/HomePage/index.tsx';
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
           {
             path: ROUTES.PROTECTED.INVOICE_LIST_PAGE,
             element: <InvoiceListPage />,
+          },
+          {
+            path: ROUTES.PROTECTED.CREATE_INVOICE_PAGE,
+            element: <CreateInvoicePage />,
           },
         ],
       },

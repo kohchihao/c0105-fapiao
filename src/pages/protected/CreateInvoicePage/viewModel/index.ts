@@ -2,6 +2,7 @@ import { useForm } from '@mantine/form';
 import { zodResolver } from 'mantine-form-zod-resolver';
 import { z } from 'zod';
 import { randomUUID } from '../../../../utils/shortId';
+import usePreviewInvoiceModal from './usePreviewInvoiceModal';
 
 const itemSchema = z.object({
   description: z.string().nonempty({ message: 'Description is required' }),
@@ -31,6 +32,7 @@ const invoiceSchema = z.object({
 });
 
 const useCreateInvoicePageViewModel = () => {
+  const previewInvoiceModal = usePreviewInvoiceModal();
   const form = useForm({
     validate: zodResolver(invoiceSchema),
     initialValues: {
@@ -99,6 +101,7 @@ const useCreateInvoicePageViewModel = () => {
     onDeleteLineItem,
     formStatus: getFormStatus(),
     onSaveInvoice,
+    previewInvoiceModal,
   };
 };
 

@@ -3,6 +3,7 @@ import {
   Button,
   Container,
   Group,
+  Modal,
   NumberInput,
   Paper,
   Stack,
@@ -25,8 +26,14 @@ import PreviewInvoice from './components/PreviewInvoice';
 import useCreateInvoicePageViewModel from './viewModel';
 
 const CreateInvoicePage = () => {
-  const { form, onAddLineItem, onDeleteLineItem, formStatus, onSaveInvoice } =
-    useCreateInvoicePageViewModel();
+  const {
+    form,
+    onAddLineItem,
+    onDeleteLineItem,
+    formStatus,
+    onSaveInvoice,
+    previewInvoiceModal,
+  } = useCreateInvoicePageViewModel();
 
   const rows = form.getValues().items.map((element, index) => {
     return (
@@ -192,17 +199,30 @@ const CreateInvoicePage = () => {
               Download invoice pdf
             </Button>
 
-            <Button variant="default" leftSection={<IconEye size={14} />}>
+            <Button
+              variant="default"
+              leftSection={<IconEye size={14} />}
+              onClick={previewInvoiceModal.onOpen}
+            >
               Preview invoice pdf
             </Button>
             {/* <Button leftSection={<IconTrash size={14} />} color="red">
             Delete Invoice
           </Button> */}
           </Group>
-
-          <PreviewInvoice />
         </Stack>
       </form>
+
+      <Modal
+        opened={previewInvoiceModal.opened}
+        onClose={previewInvoiceModal.onClose}
+        title="Preview Invoice"
+        fullScreen
+        radius={0}
+        transitionProps={{ transition: 'fade', duration: 200 }}
+      >
+        <PreviewInvoice />
+      </Modal>
     </Container>
   );
 };

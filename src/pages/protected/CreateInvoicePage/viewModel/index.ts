@@ -1,6 +1,10 @@
 import { useForm } from '@mantine/form';
 import { zodResolver } from 'mantine-form-zod-resolver';
+import { useMemo } from 'react';
+import { useParams } from 'react-router-dom';
 import { z } from 'zod';
+import { INFLATE_CURRENCY } from '../../../../constants';
+import { createInvoice } from '../../../../services/invoice';
 import { randomUUID } from '../../../../utils/shortId';
 import usePreviewInvoiceModal from './usePreviewInvoiceModal';
 
@@ -21,7 +25,7 @@ const invoiceSchema = z.object({
     .string()
     .nonempty({ message: 'Person in charge is required' }),
   address: z.string().nonempty({ message: 'Address is required' }),
-  phone_number: z.string().nonempty({ message: 'Phone number is required' }),
+  phone_number: z.number().positive({ message: 'Phone number is required' }),
   invoice_sn: z
     .string()
     .nonempty({ message: 'Invoice serial number is required' }),
@@ -32,6 +36,12 @@ const invoiceSchema = z.object({
 });
 
 const useCreateInvoicePageViewModel = () => {
+  const { projectId: paramProjectId } = useParams();
+
+  const projectId = useMemo(() => {
+    return isNaN(Number(paramProjectId)) ? 0 : Number(paramProjectId);
+  }, [paramProjectId]);
+
   const previewInvoiceModal = usePreviewInvoiceModal();
   const form = useForm({
     validate: zodResolver(invoiceSchema),
@@ -77,7 +87,7 @@ const useCreateInvoicePageViewModel = () => {
     return 'draft';
   };
 
-  const onSaveInvoice = (values: {
+  const onSaveInvoice = async (values: {
     client_company_name: string;
     client_person_in_charge: string;
     address: string;
@@ -93,6 +103,30 @@ const useCreateInvoicePageViewModel = () => {
     }[];
   }) => {
     console.log(values);
+    const processedItems = values.items.map((item) => {
+      return {
+        ...item,
+        amount: item.quantity * item.unit_price * INFLATE_CURRENCY,
+        unit_price: item.unit_price * INFLATE_CURRENCY,
+      };
+    });
+    console.log(processedItems);
+    try {
+      await createInvoice({
+        client_company_name: values.client_company_name,
+        client_person_in_charge: values.client_person_in_charge,
+        address: values.address,
+        phone_number: `${values.phone_number}`,
+        invoice_sn: values.invoice_sn,
+        raised_date: values.raised_date,
+        description: values.description,
+        comment: values.comment,
+        items: processedItems,
+        project_id: projectId,
+      });
+    } catch (error) {
+      console.error('Error saving invoice:', error);
+    }
   };
 
   return {

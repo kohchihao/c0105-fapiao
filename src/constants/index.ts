@@ -8,3 +8,5 @@ export const ROUTES = {
     CREATE_INVOICE_PAGE: '/app/project/:projectId/invoice/create',
   },
 } as const;
+
+export const INFLATE_CURRENCY = 1000;

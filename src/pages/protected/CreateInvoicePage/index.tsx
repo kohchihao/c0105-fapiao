@@ -3,6 +3,7 @@ import {
   Button,
   Container,
   Group,
+  LoadingOverlay,
   Modal,
   NumberInput,
   Paper,
@@ -33,6 +34,7 @@ const CreateInvoicePage = () => {
     formStatus,
     onSaveInvoice,
     previewInvoiceModal,
+    isOverlayLoadingVisible,
   } = useCreateInvoicePageViewModel();
 
   const rows = form.getValues().items.map((element, index) => {
@@ -223,6 +225,12 @@ const CreateInvoicePage = () => {
       >
         <PreviewInvoice />
       </Modal>
+
+      <LoadingOverlay
+        visible={isOverlayLoadingVisible}
+        zIndex={1000}
+        overlayProps={{ radius: 'sm', blur: 2 }}
+      />
     </Container>
   );
 };

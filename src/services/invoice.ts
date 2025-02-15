@@ -31,8 +31,6 @@ type InvoiceParams = {
 };
 
 export const createInvoice = async (invoiceParams: InvoiceParams) => {
-  // TODO to check if project is valid or not.
-
   const user_id = await getUserId();
 
   if (!user_id) {

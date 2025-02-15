@@ -1,4 +1,5 @@
 import { useForm } from '@mantine/form';
+import { useDisclosure } from '@mantine/hooks';
 import { zodResolver } from 'mantine-form-zod-resolver';
 import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
@@ -37,6 +38,8 @@ const invoiceSchema = z.object({
 
 const useCreateInvoicePageViewModel = () => {
   const { projectId: paramProjectId } = useParams();
+  const [isOverlayLoadingVisible, { open: showLoading, close: hideLoading }] =
+    useDisclosure(false);
 
   const projectId = useMemo(() => {
     return isNaN(Number(paramProjectId)) ? 0 : Number(paramProjectId);
@@ -102,7 +105,7 @@ const useCreateInvoicePageViewModel = () => {
       unit_price: number;
     }[];
   }) => {
-    console.log(values);
+    showLoading();
     const processedItems = values.items.map((item) => {
       return {
         ...item,
@@ -110,7 +113,6 @@ const useCreateInvoicePageViewModel = () => {
         unit_price: item.unit_price * INFLATE_CURRENCY,
       };
     });
-    console.log(processedItems);
     try {
       await createInvoice({
         client_company_name: values.client_company_name,
@@ -126,6 +128,8 @@ const useCreateInvoicePageViewModel = () => {
       });
     } catch (error) {
       console.error('Error saving invoice:', error);
+    } finally {
+      hideLoading();
     }
   };
 
@@ -136,6 +140,7 @@ const useCreateInvoicePageViewModel = () => {
     formStatus: getFormStatus(),
     onSaveInvoice,
     previewInvoiceModal,
+    isOverlayLoadingVisible,
   };
 };
 

@@ -128,14 +128,12 @@ const CreateInvoicePage = () => {
               flex={1}
             />
 
-            <NumberInput
+            <TextInput
               label="Phone Number"
               description="Client's company phone number"
               placeholder="e.g. 12345678"
               withAsterisk
               inputMode="tel"
-              allowNegative={false}
-              hideControls
               {...form.getInputProps('phone_number')}
               flex={1}
             />

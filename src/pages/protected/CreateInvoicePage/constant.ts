@@ -19,7 +19,7 @@ export const invoiceSchema = z.object({
     .string()
     .nonempty({ message: 'Person in charge is required' }),
   address: z.string().nonempty({ message: 'Address is required' }),
-  phone_number: z.number().positive({ message: 'Phone number is required' }),
+  phone_number: z.string().nonempty({ message: 'Phone number is required' }),
   invoice_sn: z
     .string()
     .nonempty({ message: 'Invoice serial number is required' }),

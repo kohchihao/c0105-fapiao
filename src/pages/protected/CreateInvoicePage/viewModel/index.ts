@@ -2,14 +2,15 @@ import { useForm } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { zodResolver } from 'mantine-form-zod-resolver';
 import { useEffect, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { INFLATE_CURRENCY } from '../../../../constants';
-import { saveInvoice } from '../../../../services/invoice';
 import { FORM_INITIAL_VALUES, invoiceSchema } from '../constant';
 import useInvoice from './useInvoice';
 import usePreviewInvoiceModal from './usePreviewInvoiceModal';
+import useSaveInvoice from './useSaveInvoice';
 
 const useCreateInvoicePageViewModel = () => {
+  const navigate = useNavigate();
   const { projectId: paramProjectId, invoiceId: paramInvoiceId } = useParams();
   const [isOverlayLoadingVisible, { open: showLoading, close: hideLoading }] =
     useDisclosure(false);
@@ -62,6 +63,17 @@ const useCreateInvoicePageViewModel = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [invoiceData?.id, isSuccess]);
 
+  const saveInvoice = useSaveInvoice({
+    invoiceId,
+    onSuccessNavigate: (params) => {
+      navigate(
+        `app/project/${params.project_id}/invoice/${params.invoice_id}/edit`,
+        { replace: true }
+      );
+    },
+    hideLoading,
+  });
+
   const onAddLineItem = () => {
     form.insertListItem('items', {
       description: '',
@@ -109,24 +121,20 @@ const useCreateInvoicePageViewModel = () => {
         unit_price: item.unit_price * INFLATE_CURRENCY,
       };
     });
-    try {
-      await saveInvoice({
-        client_company_name: values.client_company_name,
-        client_person_in_charge: values.client_person_in_charge,
-        address: values.address,
-        phone_number: `${values.phone_number}`,
-        invoice_sn: values.invoice_sn,
-        raised_date: values.raised_date,
-        description: values.description,
-        comment: values.comment,
-        items: processedItems,
-        project_id: projectId,
-      });
-    } catch (error) {
-      console.error('Error saving invoice:', error);
-    } finally {
-      hideLoading();
-    }
+
+    saveInvoice.mutate({
+      client_company_name: values.client_company_name,
+      client_person_in_charge: values.client_person_in_charge,
+      address: values.address,
+      phone_number: `${values.phone_number}`,
+      invoice_sn: values.invoice_sn,
+      raised_date: values.raised_date,
+      description: values.description,
+      comment: values.comment,
+      items: processedItems,
+      project_id: projectId,
+      invoice_id: invoiceId,
+    });
   };
 
   return {

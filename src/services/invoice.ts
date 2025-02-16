@@ -1,7 +1,7 @@
 import supabase from '../utils/supabase';
 import { getUserId } from './utils';
 
-type InvoiceParams = {
+export type SaveInvoiceParams = {
   client_company_name: string;
   client_person_in_charge: string;
   address: string;
@@ -17,9 +17,90 @@ type InvoiceParams = {
     unit_price: number;
     amount: number;
   }[];
+  invoice_id?: number;
 };
 
-export const saveInvoice = async (invoiceParams: InvoiceParams) => {
+const editInvoice = async (invoiceParams: SaveInvoiceParams) => {
+  const user_id = await getUserId();
+  console.log('edit invoice', invoiceParams);
+
+  if (!user_id) {
+    throw new Error('User id not found');
+  }
+
+  const { error, data } = await supabase
+    .from('invoice')
+    .update({
+      client_company_name: invoiceParams.client_company_name,
+      client_person_in_charge: invoiceParams.client_person_in_charge,
+      address: invoiceParams.address,
+      phone_number: invoiceParams.phone_number,
+      raised_date: invoiceParams.raised_date,
+      description: invoiceParams.description,
+      comment: invoiceParams.comment,
+    })
+    .eq('id', invoiceParams.invoice_id)
+    .eq('user_id', user_id)
+    .eq('invoice_sn', invoiceParams.invoice_sn)
+    .select()
+    .single<Invoice>();
+
+  console.log('data', data);
+
+  if (error) {
+    console.error('error', error);
+    throw new Error(error.message);
+  }
+
+  const invoiceId = data?.id;
+
+  const { error: itemError } = await supabase.rpc(
+    'delete_and_insert_invoice_items',
+    {
+      p_invoice_id: invoiceId,
+      new_items: invoiceParams.items.map((item) => ({
+        ...item,
+        user_id,
+      })),
+    }
+  );
+
+  if (itemError) {
+    console.error('error', itemError);
+    throw new Error(itemError.message);
+  }
+
+  const { data: invoiceItemsData, error: invoiceItemsError } = await supabase
+    .from('invoice')
+    .select(
+      `
+    id,
+    project_id,
+    client_company_name,
+    client_person_in_charge,
+    address,
+    phone_number,
+    invoice_sn,
+    raised_date,
+    description,
+    comment,
+    invoice_item ( invoice_id, description, quantity, unit_price, amount )
+  `
+    )
+    .eq('id', invoiceId)
+    .single();
+
+  if (invoiceItemsError) {
+    console.error('Error fetching invoice items:', invoiceItemsError);
+    throw new Error(invoiceItemsError.message);
+  }
+
+  console.log('Inserted data:', invoiceItemsData);
+
+  return invoiceItemsData;
+};
+
+const createInvoice = async (invoiceParams: SaveInvoiceParams) => {
   const user_id = await getUserId();
 
   if (!user_id) {
@@ -94,6 +175,14 @@ export const saveInvoice = async (invoiceParams: InvoiceParams) => {
   console.log('Inserted data:', invoiceItemsData);
 
   return invoiceItemsData;
+};
+
+export const saveInvoice = async (invoiceParams: SaveInvoiceParams) => {
+  if (invoiceParams.invoice_id) {
+    return editInvoice(invoiceParams);
+  }
+
+  return createInvoice(invoiceParams);
 };
 
 type Invoice = {

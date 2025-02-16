@@ -36,6 +36,7 @@ const CreateInvoicePage = () => {
     previewInvoiceModal,
     isOverlayLoadingVisible,
     previewInvoiceProps,
+    totalAmount,
   } = useCreateInvoicePageViewModel();
 
   const rows = form.getValues().items.map((element, index) => {
@@ -172,7 +173,19 @@ const CreateInvoicePage = () => {
                     <Table.Th>Actions</Table.Th>
                   </Table.Tr>
                 </Table.Thead>
-                <Table.Tbody>{rows}</Table.Tbody>
+                <Table.Tbody>
+                  {rows}
+                  <Table.Tr key="total">
+                    <Table.Td></Table.Td>
+                    <Table.Td></Table.Td>
+                    <Table.Td></Table.Td>
+                    <Table.Td></Table.Td>
+                    <Table.Td>
+                      <Text>Total ${formatCurrency(totalAmount)}</Text>
+                    </Table.Td>
+                    <Table.Td></Table.Td>
+                  </Table.Tr>
+                </Table.Tbody>
               </Table>
             </Paper>
           </Table.ScrollContainer>
@@ -180,6 +193,7 @@ const CreateInvoicePage = () => {
           <Button variant="default" onClick={onAddLineItem}>
             Add Line Item
           </Button>
+
           <Textarea
             label="Comment"
             description="Add any comments or special instructions here."

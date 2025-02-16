@@ -139,6 +139,11 @@ const useCreateInvoicePageViewModel = () => {
     });
   };
 
+  const totalAmount = form.values.items.reduce(
+    (acc, item) => acc + item.quantity * item.unit_price,
+    0
+  );
+
   const previewInvoiceProps = {
     invoiceNumber: form.values.invoice_sn,
     dateIssued: dayjs(form.values.raised_date).format('DD/MM/YYYY'),
@@ -153,10 +158,7 @@ const useCreateInvoicePageViewModel = () => {
       unitPrice: item.unit_price,
       amount: item.quantity * item.unit_price,
     })),
-    total: form.values.items.reduce(
-      (acc, item) => acc + item.quantity * item.unit_price,
-      0
-    ),
+    total: totalAmount,
   };
 
   return {
@@ -168,6 +170,7 @@ const useCreateInvoicePageViewModel = () => {
     previewInvoiceModal,
     isOverlayLoadingVisible,
     previewInvoiceProps,
+    totalAmount,
   };
 };
 

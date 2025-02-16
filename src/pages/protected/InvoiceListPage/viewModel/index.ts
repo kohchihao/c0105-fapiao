@@ -22,11 +22,16 @@ const useInvoiceListPageViewModel = () => {
     navigate(`/app/project/${projectId}/invoice/create`);
   };
 
+  const onClickInvoice = (invoiceId: number) => {
+    navigate(`/app/project/${projectId}/invoice/${invoiceId}/edit`);
+  };
+
   return {
     invoices,
     isError,
     isLoading,
     onCreateInvoice,
+    onClickInvoice,
   };
 };
 

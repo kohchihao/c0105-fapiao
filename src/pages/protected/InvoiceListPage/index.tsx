@@ -13,11 +13,11 @@ import ServerError from '../../../components/ServerError';
 import useInvoiceListPageViewModel from './viewModel';
 
 const InvoiceListPage = () => {
-  const { invoices, isLoading, isError, onCreateInvoice } =
+  const { invoices, isLoading, isError, onCreateInvoice, onClickInvoice } =
     useInvoiceListPageViewModel();
 
   const rows = invoices.map((element) => (
-    <Table.Tr key={element.id}>
+    <Table.Tr key={element.id} onClick={() => onClickInvoice(element.id)}>
       <Table.Td>{element.invoice_sn}</Table.Td>
       <Table.Td>{element.description}</Table.Td>
       <Table.Td>

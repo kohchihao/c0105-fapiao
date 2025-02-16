@@ -159,6 +159,7 @@ const useCreateInvoicePageViewModel = () => {
       amount: item.quantity * item.unit_price,
     })),
     total: totalAmount,
+    comment: form.values.comment,
   };
 
   const pdfFileName = `invoice-${form.values.invoice_sn}-${dayjs(

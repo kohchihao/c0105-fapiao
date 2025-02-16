@@ -23,6 +23,7 @@ type Props = {
     amount?: number;
   }[];
   total?: number;
+  comment?: string;
 };
 
 export const PreviewInvoiceDocument = ({
@@ -31,6 +32,7 @@ export const PreviewInvoiceDocument = ({
   billTo = { name: 'Name', company: 'Company Name', address: 'Address' },
   items,
   total,
+  comment,
 }: Props) => {
   return (
     <Document>
@@ -111,6 +113,13 @@ export const PreviewInvoiceDocument = ({
             </Text>
           </View>
         </View>
+
+        {comment ? (
+          <View style={styles.commentContainer}>
+            <Text style={styles.commentTitle}>Comment</Text>
+            <Text style={styles.commentText}>{comment}</Text>
+          </View>
+        ) : null}
       </Page>
     </Document>
   );
@@ -236,6 +245,21 @@ const styles = StyleSheet.create({
     fontSize: 12,
     padding: 8,
     textAlign: 'right',
+  },
+  commentContainer: {
+    marginTop: 24,
+    padding: 16,
+    borderRadius: 6,
+    backgroundColor: '#f0f0f0',
+  },
+  commentTitle: {
+    fontSize: 12,
+    fontFamily: 'Helvetica-Bold',
+    marginBottom: 8,
+  },
+  commentText: {
+    fontSize: 10,
+    fontFamily: 'Helvetica',
   },
 });
 

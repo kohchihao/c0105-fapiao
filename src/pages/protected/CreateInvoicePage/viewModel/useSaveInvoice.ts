@@ -17,11 +17,8 @@ const useSaveInvoice = (options: UseSaveInvoiceParams) => {
   return useMutation({
     mutationFn: (params: SaveInvoiceParams) => saveInvoice(params),
     onSuccess: (data) => {
-      if (invoiceId) {
-        hideLoading?.();
-        queryClient.invalidateQueries({ queryKey: ['invoice', invoiceId] });
-        return;
-      }
+      hideLoading?.();
+      queryClient.invalidateQueries({ queryKey: ['invoice', invoiceId] });
 
       onSuccessNavigate?.({
         project_id: data.project_id,

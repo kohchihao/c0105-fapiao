@@ -39,7 +39,7 @@ const CreateInvoicePage = () => {
 
   const rows = form.getValues().items.map((element, index) => {
     return (
-      <Table.Tr>
+      <Table.Tr key={index}>
         <Table.Td>
           <Text>{index + 1}</Text>
         </Table.Td>

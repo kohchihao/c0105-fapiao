@@ -67,9 +67,10 @@ const useCreateInvoicePageViewModel = () => {
     invoiceId,
     onSuccessNavigate: (params) => {
       navigate(
-        `app/project/${params.project_id}/invoice/${params.invoice_id}/edit`,
+        `/app/project/${params.project_id}/invoice/${params.invoice_id}/edit`,
         { replace: true }
       );
+      navigate(0);
     },
     hideLoading,
   });

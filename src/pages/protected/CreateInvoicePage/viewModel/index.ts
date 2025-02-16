@@ -161,6 +161,10 @@ const useCreateInvoicePageViewModel = () => {
     total: totalAmount,
   };
 
+  const pdfFileName = `invoice-${form.values.invoice_sn}-${dayjs(
+    form.values.raised_date
+  ).format('DD/MM/YYYY')}.pdf`;
+
   return {
     form,
     onAddLineItem,
@@ -171,6 +175,7 @@ const useCreateInvoicePageViewModel = () => {
     isOverlayLoadingVisible,
     previewInvoiceProps,
     totalAmount,
+    pdfFileName,
   };
 };
 

@@ -15,6 +15,7 @@ import {
 } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
 
+import { PDFDownloadLink } from '@react-pdf/renderer';
 import {
   IconDeviceFloppy,
   IconDownload,
@@ -23,7 +24,9 @@ import {
 } from '@tabler/icons-react';
 import { formatCurrency } from '../../../utils/currency';
 import FormStatus from './components/FormStatus';
-import PreviewInvoice from './components/PreviewInvoice';
+import PreviewInvoice, {
+  PreviewInvoiceDocument,
+} from './components/PreviewInvoice';
 import useCreateInvoicePageViewModel from './viewModel';
 
 const CreateInvoicePage = () => {
@@ -37,6 +40,7 @@ const CreateInvoicePage = () => {
     isOverlayLoadingVisible,
     previewInvoiceProps,
     totalAmount,
+    pdfFileName,
   } = useCreateInvoicePageViewModel();
 
   const rows = form.getValues().items.map((element, index) => {
@@ -211,9 +215,20 @@ const CreateInvoicePage = () => {
             >
               Save
             </Button>
-            <Button leftSection={<IconDownload size={14} />} variant="default">
-              Download invoice pdf
-            </Button>
+            <PDFDownloadLink
+              document={<PreviewInvoiceDocument {...previewInvoiceProps} />}
+              fileName={pdfFileName}
+            >
+              {({ loading }) => (
+                <Button
+                  loading={loading}
+                  leftSection={<IconDownload size={14} />}
+                  variant="default"
+                >
+                  Download invoice pdf
+                </Button>
+              )}
+            </PDFDownloadLink>
 
             <Button
               variant="default"

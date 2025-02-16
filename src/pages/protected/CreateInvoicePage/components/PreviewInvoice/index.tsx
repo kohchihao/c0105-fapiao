@@ -37,51 +37,56 @@ export const PreviewInvoiceDocument = ({
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        <View style={styles.companyHeaderContainer}>
-          <Text style={styles.companyNameText}>ABC Company</Text>
-          <Text style={styles.companyRegistationNumberText}>
-            REG : 123232131E
-          </Text>
-          <Text style={styles.companyAddressText}>
-            Jurong East Street 21, Singapore 609605
-          </Text>
-        </View>
-
-        <View style={styles.smallContainer}>
-          <View style={[styles.row, styles.marginBottom4]}>
-            <Text style={[styles.smallBoldText, styles.flex1]}>
-              Invoice number
-            </Text>
-            <Text style={[styles.smallBoldText, styles.flex1]}>
-              {invoiceNumber}
-            </Text>
+        <View style={styles.headerContainer}>
+          <View style={styles.flexCol}>
+            <Text style={styles.font24}>Invoice</Text>
           </View>
-
-          <View style={[styles.row, styles.marginBottom4]}>
-            <Text style={[styles.smallText, styles.flex1]}>Date issued</Text>
-            <Text style={[styles.smallText, styles.flex1]}>{dateIssued}</Text>
+          <View style={[styles.companyHeaderContainer, styles.alignEnd]}>
+            <Text style={styles.companyNameText}>ABC Company</Text>
+            <Text style={styles.companyRegistationNumberText}>
+              REG : 123232131E
+            </Text>
+            <Text style={styles.companyAddressText}>
+              Jurong East Street 21, Singapore 609605
+            </Text>
           </View>
         </View>
 
-        <View style={styles.smallContainer}>
-          <View style={[styles.row, styles.marginBottom4]}>
-            <Text style={[styles.smallBoldText, styles.flex1]}>Bill to</Text>
+        <View style={styles.headerContainer}>
+          <View style={styles.smallContainer}>
+            <View style={[styles.row, styles.marginBottom4]}>
+              <Text style={[styles.smallBoldText, styles.flex1]}>Bill to</Text>
+            </View>
+
+            <View style={[styles.row, styles.marginBottom4]}>
+              <Text style={[styles.smallText, styles.flex1]}>
+                {billTo?.name}
+              </Text>
+            </View>
+
+            <View style={[styles.row, styles.marginBottom4]}>
+              <Text style={[styles.smallText, styles.flex1]}>
+                {billTo?.company}
+              </Text>
+            </View>
+
+            <View style={[styles.row, styles.marginBottom4]}>
+              <Text style={[styles.smallText, styles.flex1]}>
+                {billTo?.address}
+              </Text>
+            </View>
           </View>
 
-          <View style={[styles.row, styles.marginBottom4]}>
-            <Text style={[styles.smallText, styles.flex1]}>{billTo?.name}</Text>
-          </View>
+          <View style={[styles.smallContainer, { alignItems: 'flex-end' }]}>
+            <View style={[styles.row, styles.marginBottom4]}>
+              <Text style={styles.smallText}>Invoice number: </Text>
+              <Text style={styles.smallText}>{invoiceNumber}</Text>
+            </View>
 
-          <View style={[styles.row, styles.marginBottom4]}>
-            <Text style={[styles.smallText, styles.flex1]}>
-              {billTo?.company}
-            </Text>
-          </View>
-
-          <View style={[styles.row, styles.marginBottom4]}>
-            <Text style={[styles.smallText, styles.flex1]}>
-              {billTo?.address}
-            </Text>
+            <View style={[styles.row, styles.marginBottom4]}>
+              <Text style={styles.smallText}>Date issued: </Text>
+              <Text style={styles.smallText}>{dateIssued}</Text>
+            </View>
           </View>
         </View>
 
@@ -175,9 +180,22 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: 48,
   },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
 
   companyHeaderContainer: {
     flexDirection: 'column',
+  },
+  flexCol: {
+    flexDirection: 'column',
+  },
+  font24: {
+    fontSize: 24,
+  },
+  alignEnd: {
+    alignItems: 'flex-end',
   },
   companyNameText: {
     fontSize: 24,
@@ -191,7 +209,8 @@ const styles = StyleSheet.create({
 
   smallContainer: {
     marginTop: 24,
-    maxWidth: 190,
+    maxWidth: 250,
+    flex: 1,
   },
   mediumContainer: {
     marginTop: 24,

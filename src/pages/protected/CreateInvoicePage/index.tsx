@@ -207,6 +207,7 @@ const CreateInvoicePage = () => {
               fullWidth
               size="lg"
               type="submit"
+              disabled={!form.isDirty()}
             >
               Save
             </Button>

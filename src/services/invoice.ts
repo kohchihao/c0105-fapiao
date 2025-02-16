@@ -22,7 +22,6 @@ export type SaveInvoiceParams = {
 
 const editInvoice = async (invoiceParams: SaveInvoiceParams) => {
   const user_id = await getUserId();
-  console.log('edit invoice', invoiceParams);
 
   if (!user_id) {
     throw new Error('User id not found');
@@ -62,6 +61,7 @@ const editInvoice = async (invoiceParams: SaveInvoiceParams) => {
         ...item,
         user_id,
       })),
+      p_user_id: user_id,
     }
   );
 
@@ -94,8 +94,6 @@ const editInvoice = async (invoiceParams: SaveInvoiceParams) => {
     console.error('Error fetching invoice items:', invoiceItemsError);
     throw new Error(invoiceItemsError.message);
   }
-
-  console.log('Inserted data:', invoiceItemsData);
 
   return invoiceItemsData;
 };
@@ -139,6 +137,7 @@ const createInvoice = async (invoiceParams: SaveInvoiceParams) => {
         ...item,
         user_id,
       })),
+      p_user_id: user_id,
     }
   );
 
@@ -171,8 +170,6 @@ const createInvoice = async (invoiceParams: SaveInvoiceParams) => {
     console.error('Error fetching invoice items:', invoiceItemsError);
     throw new Error(invoiceItemsError.message);
   }
-
-  console.log('Inserted data:', invoiceItemsData);
 
   return invoiceItemsData;
 };

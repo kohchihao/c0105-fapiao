@@ -1,7 +1,8 @@
 
 CREATE OR REPLACE FUNCTION public.delete_and_insert_invoice_items(
     p_invoice_id bigint,
-    new_items jsonb
+    new_items jsonb,
+    p_user_id uuid
 ) RETURNS jsonb
 LANGUAGE plpgsql
 AS $$
@@ -10,7 +11,9 @@ DECLARE
 BEGIN
     -- Delete all items for the specified invoice
     DELETE FROM public.invoice_item
-    WHERE invoice_id = p_invoice_id;
+    WHERE invoice_id = p_invoice_id
+    AND user_id = p_user_id;
+
 
     -- Insert new items into the invoice_item table
    WITH inserted AS (
@@ -32,3 +35,6 @@ BEGIN
     RETURN inserted_items;
 END;
 $$;
+
+
+DROP FUNCTION IF EXISTS public.delete_and_insert_invoice_items(bigint, jsonb, uuid);

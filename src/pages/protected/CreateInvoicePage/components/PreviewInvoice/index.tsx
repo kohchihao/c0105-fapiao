@@ -114,6 +114,38 @@ export const PreviewInvoiceDocument = ({
           </View>
         </View>
 
+        <View style={styles.creditTermContainer}>
+          <Text style={styles.creditTermText}>
+            Credit Term: Cash on Delivery
+          </Text>
+        </View>
+
+        <View style={styles.paymentContainer}>
+          <Text style={styles.paymentTitle}>Payment Options</Text>
+          <View style={styles.paymentTable}>
+            <View style={[styles.paymentTableRow, styles.paymentTableHeader]}>
+              <Text style={styles.paymentTableCell}>Method</Text>
+              <Text style={styles.paymentTableCell}>Details</Text>
+            </View>
+            <View style={styles.paymentTableRow}>
+              <Text style={styles.paymentTableCell}>Cheque</Text>
+              <Text style={styles.paymentTableCell}>
+                Please make the cheque payable to [Your Company Name]
+              </Text>
+            </View>
+            <View style={styles.paymentTableRow}>
+              <Text style={styles.paymentTableCell}>Bank Transfer</Text>
+              <Text style={styles.paymentTableCell}>
+                Account Number - 123456789, Bank - ABC Bank
+              </Text>
+            </View>
+            <View style={styles.paymentTableRow}>
+              <Text style={styles.paymentTableCell}>PayNow</Text>
+              <Text style={styles.paymentTableCell}>UEN - 201234567A</Text>
+            </View>
+          </View>
+        </View>
+
         {comment ? (
           <View style={styles.commentContainer}>
             <Text style={styles.commentTitle}>Comment</Text>
@@ -160,6 +192,10 @@ const styles = StyleSheet.create({
   smallContainer: {
     marginTop: 24,
     maxWidth: 190,
+  },
+  mediumContainer: {
+    marginTop: 24,
+    maxWidth: 400,
   },
 
   smallBoldText: {
@@ -259,6 +295,46 @@ const styles = StyleSheet.create({
   },
   commentText: {
     fontSize: 10,
+    fontFamily: 'Helvetica',
+  },
+  paymentContainer: {
+    marginTop: 16,
+  },
+  paymentTitle: {
+    fontSize: 14,
+    fontFamily: 'Helvetica-Bold',
+    marginBottom: 8,
+  },
+  paymentTable: {
+    width: '100%',
+    borderStyle: 'solid',
+    borderWidth: 1,
+    borderColor: '#bfbfbf',
+    marginBottom: 8,
+  },
+  paymentTableRow: {
+    flexDirection: 'row',
+  },
+  paymentTableCell: {
+    flex: 1,
+    margin: 'auto',
+    marginTop: 4,
+    padding: 4,
+    fontSize: 12,
+    fontFamily: 'Helvetica',
+
+    borderColor: '#bfbfbf',
+    minHeight: 40,
+  },
+  paymentTableHeader: {
+    backgroundColor: '#e0e0e0',
+    fontFamily: 'Helvetica-Bold',
+  },
+  creditTermContainer: {
+    marginTop: 24,
+  },
+  creditTermText: {
+    fontSize: 12,
     fontFamily: 'Helvetica',
   },
 });

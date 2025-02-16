@@ -35,6 +35,7 @@ const CreateInvoicePage = () => {
     onSaveInvoice,
     previewInvoiceModal,
     isOverlayLoadingVisible,
+    previewInvoiceProps,
   } = useCreateInvoicePageViewModel();
 
   const rows = form.getValues().items.map((element, index) => {
@@ -74,7 +75,7 @@ const CreateInvoicePage = () => {
         </Table.Td>
 
         <Table.Td>
-          <Text>{formatCurrency(element.quantity * element.unit_price)}</Text>
+          <Text>${formatCurrency(element.quantity * element.unit_price)}</Text>
         </Table.Td>
 
         <Table.Td>
@@ -221,7 +222,7 @@ const CreateInvoicePage = () => {
         radius={0}
         transitionProps={{ transition: 'fade', duration: 200 }}
       >
-        <PreviewInvoice />
+        <PreviewInvoice {...previewInvoiceProps} />
       </Modal>
 
       <LoadingOverlay

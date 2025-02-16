@@ -6,6 +6,7 @@ import {
   Text,
   View,
 } from '@react-pdf/renderer';
+import { formatCurrency } from '../../../../../utils/currency';
 
 type Props = {
   invoiceNumber?: string;
@@ -98,8 +99,12 @@ const PreviewInvoice = ({
                 {item?.description}
               </Text>
               <Text style={styles.genericCellText}>{item?.quantity}</Text>
-              <Text style={styles.genericCellText}>{item?.unitPrice}</Text>
-              <Text style={styles.amountCellText}>{item?.amount}</Text>
+              <Text style={styles.genericCellText}>
+                ${formatCurrency(item?.unitPrice || 0)}
+              </Text>
+              <Text style={styles.amountCellText}>
+                ${formatCurrency(item?.amount || 0)}
+              </Text>
             </View>
           ))}
 
@@ -107,7 +112,7 @@ const PreviewInvoice = ({
             <View style={styles.totalContentContainer}>
               <Text style={styles.totalText}>Total</Text>
               <Text style={{ ...styles.totalText, fontFamily: undefined }}>
-                {total}
+                ${formatCurrency(total || 0)}
               </Text>
             </View>
           </View>

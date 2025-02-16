@@ -1,5 +1,6 @@
 import { useForm } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
+import dayjs from 'dayjs';
 import { zodResolver } from 'mantine-form-zod-resolver';
 import { useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -138,6 +139,26 @@ const useCreateInvoicePageViewModel = () => {
     });
   };
 
+  const previewInvoiceProps = {
+    invoiceNumber: form.values.invoice_sn,
+    dateIssued: dayjs(form.values.raised_date).format('DD/MM/YYYY'),
+    billTo: {
+      name: form.values.client_person_in_charge,
+      company: form.values.client_company_name,
+      address: form.values.address,
+    },
+    items: form.values.items.map((item) => ({
+      description: item.description,
+      quantity: item.quantity,
+      unitPrice: item.unit_price,
+      amount: item.quantity * item.unit_price,
+    })),
+    total: form.values.items.reduce(
+      (acc, item) => acc + item.quantity * item.unit_price,
+      0
+    ),
+  };
+
   return {
     form,
     onAddLineItem,
@@ -146,6 +167,7 @@ const useCreateInvoicePageViewModel = () => {
     onSaveInvoice,
     previewInvoiceModal,
     isOverlayLoadingVisible,
+    previewInvoiceProps,
   };
 };
 

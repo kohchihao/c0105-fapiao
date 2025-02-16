@@ -6,6 +6,7 @@ export const ROUTES = {
     HOME: '/app',
     INVOICE_LIST_PAGE: '/app/project/:projectId',
     CREATE_INVOICE_PAGE: '/app/project/:projectId/invoice/create',
+    EDIT_INVOICE_PAGE: '/app/project/:projectId/invoice/:invoiceId/edit',
   },
 } as const;
 

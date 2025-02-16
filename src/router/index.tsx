@@ -39,6 +39,10 @@ const router = createBrowserRouter([
             path: ROUTES.PROTECTED.CREATE_INVOICE_PAGE,
             element: <CreateInvoicePage />,
           },
+          {
+            path: ROUTES.PROTECTED.EDIT_INVOICE_PAGE,
+            element: <CreateInvoicePage />,
+          },
         ],
       },
     ],

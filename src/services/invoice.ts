@@ -1,17 +1,6 @@
 import supabase from '../utils/supabase';
 import { getUserId } from './utils';
 
-// export const createInvoice = async (invoiceData: any) => {
-//   const { data, error } = await supabase.from('invoices').insert([invoiceData]);
-
-//   if (error) {
-//     console.error('Error creating invoice:', error);
-//     throw error;
-//   }
-
-//   return data;
-// };
-
 type InvoiceParams = {
   client_company_name: string;
   client_person_in_charge: string;
@@ -30,7 +19,7 @@ type InvoiceParams = {
   }[];
 };
 
-export const createInvoice = async (invoiceParams: InvoiceParams) => {
+export const saveInvoice = async (invoiceParams: InvoiceParams) => {
   const user_id = await getUserId();
 
   if (!user_id) {
@@ -155,6 +144,63 @@ export const getInvoices = async (params: { projectId: number }) => {
 
   if (error) {
     console.error('Error getting invoices:', error);
+    throw new Error(error.message);
+  }
+
+  return data;
+};
+
+export type InvoiceWithItems = {
+  id: number;
+  client_company_name: string;
+  client_person_in_charge: string;
+  address: string;
+  phone_number: string;
+  invoice_sn: string;
+  raised_date: Date;
+  description: string;
+  comment: string;
+  project_id: number;
+  invoice_item: {
+    invoice_id: number;
+    description: string;
+    quantity: number;
+    unit_price: number;
+    amount: number;
+  }[];
+};
+
+export const getInvoice = async (params: { invoiceId: number }) => {
+  const { invoiceId } = params;
+  const user_id = await getUserId();
+
+  if (!user_id) {
+    throw new Error('User id not found');
+  }
+
+  const { data, error } = await supabase
+    .from('invoice')
+    .select(
+      `
+      id,
+      project_id,
+      client_company_name,
+      client_person_in_charge,
+      address,
+      phone_number,
+      invoice_sn,
+      raised_date,
+      description,
+      comment,
+      invoice_item ( invoice_id, description, quantity, unit_price, amount )
+    `
+    )
+    .eq('user_id', user_id)
+    .eq('id', invoiceId)
+    .single<InvoiceWithItems>();
+
+  if (error) {
+    console.error('Error getting invoice:', error);
     throw new Error(error.message);
   }
 

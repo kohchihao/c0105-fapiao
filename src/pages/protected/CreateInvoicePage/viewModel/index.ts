@@ -1,43 +1,16 @@
 import { useForm } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { zodResolver } from 'mantine-form-zod-resolver';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { z } from 'zod';
 import { INFLATE_CURRENCY } from '../../../../constants';
-import { createInvoice } from '../../../../services/invoice';
-import { randomUUID } from '../../../../utils/shortId';
+import { saveInvoice } from '../../../../services/invoice';
+import { FORM_INITIAL_VALUES, invoiceSchema } from '../constant';
+import useInvoice from './useInvoice';
 import usePreviewInvoiceModal from './usePreviewInvoiceModal';
 
-const itemSchema = z.object({
-  description: z.string().nonempty({ message: 'Description is required' }),
-  quantity: z
-    .number()
-    .positive({ message: 'Quantity must be a positive number' }),
-  unit_price: z
-    .number()
-    .positive({ message: 'Unit price must be a positive number' }),
-});
-const invoiceSchema = z.object({
-  client_company_name: z
-    .string()
-    .nonempty({ message: 'Client company name is required' }),
-  client_person_in_charge: z
-    .string()
-    .nonempty({ message: 'Person in charge is required' }),
-  address: z.string().nonempty({ message: 'Address is required' }),
-  phone_number: z.number().positive({ message: 'Phone number is required' }),
-  invoice_sn: z
-    .string()
-    .nonempty({ message: 'Invoice serial number is required' }),
-  raised_date: z.date({ required_error: 'Raised date is required' }),
-  description: z.string().nonempty({ message: 'Description is required' }),
-  comment: z.string().optional(),
-  items: z.array(itemSchema),
-});
-
 const useCreateInvoicePageViewModel = () => {
-  const { projectId: paramProjectId } = useParams();
+  const { projectId: paramProjectId, invoiceId: paramInvoiceId } = useParams();
   const [isOverlayLoadingVisible, { open: showLoading, close: hideLoading }] =
     useDisclosure(false);
 
@@ -45,27 +18,49 @@ const useCreateInvoicePageViewModel = () => {
     return isNaN(Number(paramProjectId)) ? 0 : Number(paramProjectId);
   }, [paramProjectId]);
 
+  const invoiceId = useMemo(() => {
+    return isNaN(Number(paramInvoiceId)) ? 0 : Number(paramInvoiceId);
+  }, [paramInvoiceId]);
+
   const previewInvoiceModal = usePreviewInvoiceModal();
+
+  const {
+    data: invoiceData,
+    isLoading: isInvoiceLoading,
+    isSuccess,
+  } = useInvoice({
+    invoiceId,
+  });
+
+  /**
+   * useEffect hook to handle the visibility of the loading overlay based on the invoice loading state.
+   * When the invoice is loading, the loading overlay is shown. Once the loading is complete, the overlay is hidden.
+   *
+   */
+  useEffect(() => {
+    if (isInvoiceLoading) {
+      showLoading();
+    } else {
+      hideLoading();
+    }
+  }, [isInvoiceLoading, showLoading, hideLoading]);
+
   const form = useForm({
     validate: zodResolver(invoiceSchema),
-    initialValues: {
-      client_company_name: '',
-      client_person_in_charge: '',
-      address: '',
-      phone_number: '',
-      invoice_sn: randomUUID(),
-      raised_date: new Date(),
-      description: '',
-      comment: '',
-      items: [
-        {
-          description: '',
-          quantity: 1,
-          unit_price: 0,
-        },
-      ],
-    },
+    initialValues: FORM_INITIAL_VALUES,
   });
+
+  /**
+   * Initialise the form with the invoice data when the invoice data is available and the request is successful.
+   * We don't put `form` as part of dependency array because it is not stable and will cause infinite loop.
+   */
+  useEffect(() => {
+    if (invoiceData?.id && isSuccess) {
+      form.setInitialValues(invoiceData);
+      form.setValues(invoiceData);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [invoiceData?.id, isSuccess]);
 
   const onAddLineItem = () => {
     form.insertListItem('items', {
@@ -84,8 +79,9 @@ const useCreateInvoicePageViewModel = () => {
       return 'dirty';
     }
 
-    // TODO: implement from api response.
-    // return 'saved'
+    if (invoiceData?.id) {
+      return 'saved';
+    }
 
     return 'draft';
   };
@@ -114,7 +110,7 @@ const useCreateInvoicePageViewModel = () => {
       };
     });
     try {
-      await createInvoice({
+      await saveInvoice({
         client_company_name: values.client_company_name,
         client_person_in_charge: values.client_person_in_charge,
         address: values.address,

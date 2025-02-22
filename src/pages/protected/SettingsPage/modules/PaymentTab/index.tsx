@@ -28,7 +28,7 @@ const PaymentTab = () => {
             {...form.getInputProps('bankAccountNumber')}
           />
           <TextInput
-            label="UEN"
+            label="PayNow UEN"
             description="Unique Entity Number"
             placeholder="123456XX"
             required

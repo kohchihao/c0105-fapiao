@@ -3,6 +3,7 @@ import { useDisclosure } from '@mantine/hooks';
 import { IconCoinMoneroFilled } from '@tabler/icons-react';
 import { RouterProvider } from 'react-router-dom';
 import classes from './App.module.css';
+import NavbarMenu from './components/NavbarMenu';
 import { NAVBAR_ITEMS } from './constants/navbar';
 import router from './router';
 
@@ -34,6 +35,7 @@ const App = () => {
                   {item.title}
                 </UnstyledButton>
               ))}
+              <NavbarMenu />
             </Group>
           </Group>
         </Group>

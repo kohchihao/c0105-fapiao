@@ -8,6 +8,7 @@ import NotFoundPage from '../pages/NotFoundPage/index.tsx';
 import CreateInvoicePage from '../pages/protected/CreateInvoicePage/index.tsx';
 import ProtectedHomePage from '../pages/protected/HomePage/index.tsx';
 import InvoiceListPage from '../pages/protected/InvoiceListPage/index.tsx';
+import SettingsPage from '../pages/protected/SettingsPage/index.tsx';
 import HomePage from '../pages/public/HomePage/index.tsx';
 
 const router = createBrowserRouter([
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
           {
             path: ROUTES.PROTECTED.EDIT_INVOICE_PAGE,
             element: <CreateInvoicePage />,
+          },
+          {
+            path: ROUTES.PROTECTED.SETTINGS_PAGE,
+            element: <SettingsPage />,
           },
         ],
       },

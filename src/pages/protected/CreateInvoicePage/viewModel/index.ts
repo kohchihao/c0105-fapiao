@@ -6,6 +6,7 @@ import { useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { INFLATE_CURRENCY } from '../../../../constants';
 import useCompany from '../../../../hooks/useCompany';
+import usePayment from '../../../../hooks/usePayment';
 import { FORM_INITIAL_VALUES, invoiceSchema } from '../constant';
 import useInvoice from './useInvoice';
 import usePreviewInvoiceModal from './usePreviewInvoiceModal';
@@ -36,6 +37,7 @@ const useCreateInvoicePageViewModel = () => {
   });
 
   const { data: companyData } = useCompany();
+  const { data: paymentData } = usePayment();
 
   /**
    * useEffect hook to handle the visibility of the loading overlay based on the invoice loading state.
@@ -147,6 +149,28 @@ const useCreateInvoicePageViewModel = () => {
     0
   );
 
+  const paymentOptions = useMemo(() => {
+    const options = [];
+    const bankAccount = paymentData?.find(
+      (item) => item.type === 'bank_account'
+    );
+    const uen = paymentData?.find((item) => item.type === 'uen');
+    if (bankAccount) {
+      options.push({
+        method: 'Bank Account',
+        details: `${bankAccount.details.bank_name} - ${bankAccount.details.account_number}`,
+      });
+    }
+
+    if (uen) {
+      options.push({
+        method: 'PayNow',
+        details: `${uen.details.uen}`,
+      });
+    }
+    return options;
+  }, [paymentData]);
+
   const previewInvoiceProps = {
     invoiceNumber: form.values.invoice_sn,
     dateIssued: dayjs(form.values.raised_date).format('DD/MM/YYYY'),
@@ -168,6 +192,7 @@ const useCreateInvoicePageViewModel = () => {
       address: companyData?.address,
       uen: companyData?.uen,
     },
+    paymentOptions,
   };
 
   const pdfFileName = `invoice-${form.values.invoice_sn}-${dayjs(

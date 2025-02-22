@@ -29,6 +29,10 @@ type Props = {
     uen?: string;
     address?: string;
   };
+  paymentOptions?: {
+    method?: string;
+    details?: string;
+  }[];
 };
 
 export const PreviewInvoiceDocument = ({
@@ -43,6 +47,7 @@ export const PreviewInvoiceDocument = ({
     uen: 'Company UEN',
     address: 'Company Address',
   },
+  paymentOptions,
 }: Props) => {
   return (
     <Document>
@@ -140,22 +145,12 @@ export const PreviewInvoiceDocument = ({
               <Text style={styles.paymentTableCell}>Method</Text>
               <Text style={styles.paymentTableCell}>Details</Text>
             </View>
-            <View style={styles.paymentTableRow}>
-              <Text style={styles.paymentTableCell}>Cheque</Text>
-              <Text style={styles.paymentTableCell}>
-                Please make the cheque payable to [Your Company Name]
-              </Text>
-            </View>
-            <View style={styles.paymentTableRow}>
-              <Text style={styles.paymentTableCell}>Bank Transfer</Text>
-              <Text style={styles.paymentTableCell}>
-                Account Number - 123456789, Bank - ABC Bank
-              </Text>
-            </View>
-            <View style={styles.paymentTableRow}>
-              <Text style={styles.paymentTableCell}>PayNow</Text>
-              <Text style={styles.paymentTableCell}>UEN - 201234567A</Text>
-            </View>
+            {paymentOptions?.map((option, index) => (
+              <View key={index} style={styles.paymentTableRow}>
+                <Text style={styles.paymentTableCell}>{option.method}</Text>
+                <Text style={styles.paymentTableCell}>{option.details}</Text>
+              </View>
+            ))}
           </View>
         </View>
 

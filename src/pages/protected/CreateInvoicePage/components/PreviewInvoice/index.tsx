@@ -24,6 +24,11 @@ type Props = {
   }[];
   total?: number;
   comment?: string;
+  company?: {
+    name?: string;
+    uen?: string;
+    address?: string;
+  };
 };
 
 export const PreviewInvoiceDocument = ({
@@ -33,6 +38,11 @@ export const PreviewInvoiceDocument = ({
   items,
   total,
   comment,
+  company = {
+    name: 'Company Name',
+    uen: 'Company UEN',
+    address: 'Company Address',
+  },
 }: Props) => {
   return (
     <Document>
@@ -42,13 +52,11 @@ export const PreviewInvoiceDocument = ({
             <Text style={styles.font24}>Invoice</Text>
           </View>
           <View style={[styles.companyHeaderContainer, styles.alignEnd]}>
-            <Text style={styles.companyNameText}>ABC Company</Text>
+            <Text style={styles.companyNameText}>{company?.name}</Text>
             <Text style={styles.companyRegistationNumberText}>
-              REG : 123232131E
+              UEN: {company?.uen}
             </Text>
-            <Text style={styles.companyAddressText}>
-              Jurong East Street 21, Singapore 609605
-            </Text>
+            <Text style={styles.companyAddressText}>{company?.address}</Text>
           </View>
         </View>
 

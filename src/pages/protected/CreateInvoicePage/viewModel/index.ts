@@ -5,6 +5,7 @@ import { zodResolver } from 'mantine-form-zod-resolver';
 import { useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { INFLATE_CURRENCY } from '../../../../constants';
+import useCompany from '../../../../hooks/useCompany';
 import { FORM_INITIAL_VALUES, invoiceSchema } from '../constant';
 import useInvoice from './useInvoice';
 import usePreviewInvoiceModal from './usePreviewInvoiceModal';
@@ -33,6 +34,8 @@ const useCreateInvoicePageViewModel = () => {
   } = useInvoice({
     invoiceId,
   });
+
+  const { data: companyData } = useCompany();
 
   /**
    * useEffect hook to handle the visibility of the loading overlay based on the invoice loading state.
@@ -160,6 +163,11 @@ const useCreateInvoicePageViewModel = () => {
     })),
     total: totalAmount,
     comment: form.values.comment,
+    company: {
+      name: companyData?.name,
+      address: companyData?.address,
+      uen: companyData?.uen,
+    },
   };
 
   const pdfFileName = `invoice-${form.values.invoice_sn}-${dayjs(

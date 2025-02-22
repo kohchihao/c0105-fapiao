@@ -7,7 +7,6 @@ type UseInvoiceParams = {
 };
 
 const useInvoice = ({ invoiceId }: UseInvoiceParams) => {
-  console.log('invoiceId', invoiceId);
   return useQuery({
     queryKey: ['invoice', invoiceId],
     queryFn: () => getInvoice({ invoiceId }),

@@ -2,7 +2,7 @@ import { useForm } from '@mantine/form';
 import { zodResolver } from 'mantine-form-zod-resolver';
 import { useEffect } from 'react';
 import { z } from 'zod';
-import useCompany from '../hooks/useCompany';
+import useCompany from '../../../../../../hooks/useCompany';
 import useSaveCompany from '../hooks/useSaveCompany';
 
 // Define the schema using zod

@@ -1,6 +1,7 @@
 import { Container, Stack, Tabs, Title } from '@mantine/core';
 import { IconMessageCircle, IconPhoto } from '@tabler/icons-react';
 import CompanyTab from './modules/CompanyTab';
+import PaymentTab from './modules/PaymentTab';
 
 const SettingsPage = () => {
   return (
@@ -25,7 +26,9 @@ const SettingsPage = () => {
             <CompanyTab />
           </Tabs.Panel>
 
-          <Tabs.Panel value="payment">Settings tab content</Tabs.Panel>
+          <Tabs.Panel value="payment">
+            <PaymentTab />
+          </Tabs.Panel>
         </Tabs>
       </Stack>
     </Container>

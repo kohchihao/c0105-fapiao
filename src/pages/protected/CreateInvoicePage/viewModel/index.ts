@@ -8,9 +8,10 @@ import { INFLATE_CURRENCY } from '../../../../constants';
 import useCompany from '../../../../hooks/useCompany';
 import usePayment from '../../../../hooks/usePayment';
 import { FORM_INITIAL_VALUES, invoiceSchema } from '../constant';
-import useInvoice from './useInvoice';
+import useInvoice from '../hooks/useInvoice';
+import useNextInvoiceSn from '../hooks/useNextInvoiceSn';
+import useSaveInvoice from '../hooks/useSaveInvoice';
 import usePreviewInvoiceModal from './usePreviewInvoiceModal';
-import useSaveInvoice from './useSaveInvoice';
 
 const useCreateInvoicePageViewModel = () => {
   const navigate = useNavigate();
@@ -27,6 +28,11 @@ const useCreateInvoicePageViewModel = () => {
   }, [paramInvoiceId]);
 
   const previewInvoiceModal = usePreviewInvoiceModal();
+
+  const { data: nextInvoiceSnData } = useNextInvoiceSn({
+    projectId,
+    invoiceId,
+  });
 
   const {
     data: invoiceData,
@@ -56,6 +62,17 @@ const useCreateInvoicePageViewModel = () => {
     validate: zodResolver(invoiceSchema),
     initialValues: FORM_INITIAL_VALUES,
   });
+
+  useEffect(() => {
+    if (nextInvoiceSnData) {
+      form.setInitialValues({
+        ...FORM_INITIAL_VALUES,
+        invoice_sn: nextInvoiceSnData,
+      });
+      form.setFieldValue('invoice_sn', nextInvoiceSnData);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [nextInvoiceSnData]);
 
   /**
    * Initialise the form with the invoice data when the invoice data is available and the request is successful.

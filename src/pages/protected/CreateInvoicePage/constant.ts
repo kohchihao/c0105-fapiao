@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { randomUUID } from '../../../utils/shortId';
 
 export const itemSchema = z.object({
   description: z.string().nonempty({ message: 'Description is required' }),
@@ -34,7 +33,7 @@ export const FORM_INITIAL_VALUES = {
   client_person_in_charge: '',
   address: '',
   phone_number: '',
-  invoice_sn: randomUUID(),
+  invoice_sn: '',
   raised_date: new Date(),
   description: '',
   comment: '',

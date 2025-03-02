@@ -292,3 +292,19 @@ export const getInvoice = async (params: { invoiceId: number }) => {
 
   return data;
 };
+
+export const getNextInvoiceSn = async (params: { projectId: number }) => {
+  const { projectId } = params;
+
+  const { data, error } = await supabase.rpc('get_next_invoice_id', {
+    project_id: projectId,
+  });
+
+  if (error) {
+    console.error('Error fetching next invoice ID:', error);
+    throw new Error(error.message);
+  }
+
+  console.log('Next Invoice ID:', data);
+  return data;
+};

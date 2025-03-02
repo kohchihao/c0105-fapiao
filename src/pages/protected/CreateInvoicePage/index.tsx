@@ -256,15 +256,12 @@ const CreateInvoicePage = () => {
               document={<PreviewInvoiceDocument {...previewInvoiceProps} />}
               fileName={pdfFileName}
             >
-              {({ loading }) => (
-                <Button
-                  loading={loading}
-                  leftSection={<IconDownload size={14} />}
-                  variant="default"
-                >
-                  Download invoice pdf
-                </Button>
-              )}
+              <Button
+                leftSection={<IconDownload size={14} />}
+                variant="default"
+              >
+                Download invoice pdf
+              </Button>
             </PDFDownloadLink>
 
             <Button

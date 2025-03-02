@@ -103,6 +103,12 @@ export const PreviewInvoiceDocument = ({
           </View>
         </View>
 
+        {comment ? (
+          <View style={styles.commentContainer}>
+            <Text style={styles.commentText}>{comment}</Text>
+          </View>
+        ) : null}
+
         <View style={styles.tableHeaderContainer}>
           <Text style={styles.descriptionHeaderText}>Description</Text>
           <Text style={styles.quantityHeaderText}>Qty</Text>
@@ -153,13 +159,6 @@ export const PreviewInvoiceDocument = ({
             ))}
           </View>
         </View>
-
-        {comment ? (
-          <View style={styles.commentContainer}>
-            <Text style={styles.commentTitle}>Comment</Text>
-            <Text style={styles.commentText}>{comment}</Text>
-          </View>
-        ) : null}
       </Page>
     </Document>
   );
@@ -306,7 +305,7 @@ const styles = StyleSheet.create({
   },
   commentContainer: {
     marginTop: 24,
-    padding: 16,
+    padding: 8,
     borderRadius: 6,
     backgroundColor: '#f0f0f0',
   },

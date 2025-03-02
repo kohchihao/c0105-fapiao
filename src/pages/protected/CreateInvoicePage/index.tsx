@@ -104,6 +104,13 @@ const CreateInvoicePage = () => {
             {...form.getInputProps('description')}
           />
 
+          <Textarea
+            label="Comment"
+            description="Add any comments or special instructions here."
+            placeholder="e.g., Please deliver before 5 PM"
+            {...form.getInputProps('comment')}
+          />
+
           <Group>
             <TextInput
               label="Client Company Name"
@@ -197,13 +204,6 @@ const CreateInvoicePage = () => {
           <Button variant="default" onClick={onAddLineItem}>
             Add Line Item
           </Button>
-
-          <Textarea
-            label="Comment"
-            description="Add any comments or special instructions here."
-            placeholder="e.g., Please deliver before 5 PM"
-            {...form.getInputProps('comment')}
-          />
 
           <Group>
             <Button

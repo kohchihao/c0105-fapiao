@@ -206,6 +206,43 @@ const CreateInvoicePage = () => {
           </Button>
 
           <Group>
+            <TextInput
+              label="Conversion Currency"
+              description="Currency to convert the total amount to"
+              placeholder="e.g. USD, EUR, CNY"
+              {...form.getInputProps('conversion_currency')}
+              flex={1}
+            />
+
+            <NumberInput
+              label="Currency Rate"
+              description="Exchange rate for conversion"
+              placeholder="e.g. 1.35"
+              decimalScale={4}
+              min={0.0001}
+              step={0.01}
+              allowNegative={false}
+              {...form.getInputProps('conversion_currency_rate')}
+              flex={1}
+            />
+          </Group>
+
+          {form.values.conversion_currency &&
+            form.values.conversion_currency_rate > 0 && (
+              <Paper withBorder p="md">
+                <Group>
+                  <Text>Total in {form.values.conversion_currency}:</Text>
+                  <Text fw={600}>
+                    {form.values.conversion_currency}{' '}
+                    {formatCurrency(
+                      totalAmount * form.values.conversion_currency_rate
+                    )}
+                  </Text>
+                </Group>
+              </Paper>
+            )}
+
+          <Group>
             <Button
               leftSection={<IconDeviceFloppy size={20} />}
               fullWidth

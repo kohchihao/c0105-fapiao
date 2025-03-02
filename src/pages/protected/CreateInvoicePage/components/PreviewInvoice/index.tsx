@@ -33,6 +33,10 @@ type Props = {
     method?: string;
     details?: string;
   }[];
+  currency?: {
+    symbol?: string;
+    rate?: number;
+  };
 };
 
 export const PreviewInvoiceDocument = ({
@@ -48,6 +52,7 @@ export const PreviewInvoiceDocument = ({
     address: 'Company Address',
   },
   paymentOptions,
+  currency,
 }: Props) => {
   return (
     <Document>
@@ -130,11 +135,24 @@ export const PreviewInvoiceDocument = ({
         ))}
 
         <View style={styles.totalContainer}>
-          <View style={styles.totalContentContainer}>
-            <Text style={styles.totalText}>Total</Text>
-            <Text style={{ ...styles.totalText, fontFamily: undefined }}>
-              ${formatCurrency(total || 0)}
-            </Text>
+          <View style={{ flexDirection: 'column' }}>
+            <View style={styles.totalContentContainer}>
+              <Text style={styles.totalText}>Total</Text>
+              <Text style={{ ...styles.totalText, fontFamily: undefined }}>
+                ${formatCurrency(total || 0)}
+              </Text>
+            </View>
+
+            {currency && total ? (
+              <View style={styles.convertedTotalContentContainer}>
+                <Text style={styles.convertTotalText}>{currency.symbol}</Text>
+                <Text
+                  style={{ ...styles.convertTotalText, fontFamily: undefined }}
+                >
+                  {formatCurrency((currency?.rate || 0) * total || 0)}
+                </Text>
+              </View>
+            ) : null}
           </View>
         </View>
 
@@ -248,9 +266,19 @@ const styles = StyleSheet.create({
     width: 190,
     borderTopWidth: 1,
     borderTopColor: 'grey',
-    marginVertical: 8,
+    marginTop: 8,
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  convertedTotalContentContainer: {
+    width: 190,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  convertTotalText: {
+    fontSize: 12,
+    fontFamily: 'Helvetica-Bold',
+    paddingHorizontal: 8,
   },
   totalText: {
     fontSize: 12,

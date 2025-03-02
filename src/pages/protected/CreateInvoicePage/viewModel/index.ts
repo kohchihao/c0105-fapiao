@@ -136,6 +136,8 @@ const useCreateInvoicePageViewModel = () => {
       quantity: number;
       unit_price: number;
     }[];
+    conversion_currency: string;
+    conversion_currency_rate: number;
   }) => {
     showLoading();
     const processedItems = values.items.map((item) => {
@@ -158,6 +160,8 @@ const useCreateInvoicePageViewModel = () => {
       items: processedItems,
       project_id: projectId,
       invoice_id: invoiceId,
+      conversion_currency: values.conversion_currency,
+      conversion_currency_rate: values.conversion_currency_rate,
     });
   };
 
@@ -210,6 +214,10 @@ const useCreateInvoicePageViewModel = () => {
       uen: companyData?.uen,
     },
     paymentOptions,
+    currency: {
+      symbol: form.values.conversion_currency,
+      rate: form.values.conversion_currency_rate,
+    },
   };
 
   const pdfFileName = `invoice-${form.values.invoice_sn}-${dayjs(

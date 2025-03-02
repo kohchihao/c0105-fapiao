@@ -29,6 +29,8 @@ const useInvoice = ({ invoiceId }: UseInvoiceParams) => {
             unit_price: deflateCurrency(item.unit_price),
           };
         }),
+        conversion_currency: data.conversion_currency,
+        conversion_currency_rate: data.conversion_currency_rate,
       };
     },
     enabled: !!invoiceId,

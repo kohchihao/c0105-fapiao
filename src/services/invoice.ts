@@ -18,6 +18,8 @@ export type SaveInvoiceParams = {
     amount: number;
   }[];
   invoice_id?: number;
+  conversion_currency?: string;
+  conversion_currency_rate?: number;
 };
 
 const editInvoice = async (invoiceParams: SaveInvoiceParams) => {
@@ -37,6 +39,8 @@ const editInvoice = async (invoiceParams: SaveInvoiceParams) => {
       raised_date: invoiceParams.raised_date,
       description: invoiceParams.description,
       comment: invoiceParams.comment,
+      conversion_currency: invoiceParams.conversion_currency,
+      conversion_currency_rate: invoiceParams.conversion_currency_rate,
     })
     .eq('id', invoiceParams.invoice_id)
     .eq('user_id', user_id)
@@ -84,7 +88,9 @@ const editInvoice = async (invoiceParams: SaveInvoiceParams) => {
     raised_date,
     description,
     comment,
-    invoice_item ( invoice_id, description, quantity, unit_price, amount )
+    invoice_item ( invoice_id, description, quantity, unit_price, amount ),
+    conversion_currency,
+    conversion_currency_rate
   `
     )
     .eq('id', invoiceId)
@@ -117,6 +123,8 @@ const createInvoice = async (invoiceParams: SaveInvoiceParams) => {
       raised_date: invoiceParams.raised_date,
       description: invoiceParams.description,
       comment: invoiceParams.comment,
+      conversion_currency: invoiceParams.conversion_currency,
+      conversion_currency_rate: invoiceParams.conversion_currency_rate,
       user_id,
     })
     .select()
@@ -160,7 +168,9 @@ const createInvoice = async (invoiceParams: SaveInvoiceParams) => {
     raised_date,
     description,
     comment,
-    invoice_item ( invoice_id, description, quantity, unit_price, amount )
+    invoice_item ( invoice_id, description, quantity, unit_price, amount ),
+    conversion_currency,
+    conversion_currency_rate
   `
     )
     .eq('id', invoiceId)
@@ -254,6 +264,8 @@ export type InvoiceWithItems = {
     unit_price: number;
     amount: number;
   }[];
+  conversion_currency: string;
+  conversion_currency_rate: number;
 };
 
 export const getInvoice = async (params: { invoiceId: number }) => {
@@ -278,7 +290,9 @@ export const getInvoice = async (params: { invoiceId: number }) => {
       raised_date,
       description,
       comment,
-      invoice_item ( invoice_id, description, quantity, unit_price, amount )
+      invoice_item ( invoice_id, description, quantity, unit_price, amount ),
+      conversion_currency,
+      conversion_currency_rate
     `
     )
     .eq('user_id', user_id)

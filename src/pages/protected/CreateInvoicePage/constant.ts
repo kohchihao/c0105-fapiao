@@ -26,6 +26,8 @@ export const invoiceSchema = z.object({
   description: z.string().nonempty({ message: 'Description is required' }),
   comment: z.string().optional(),
   items: z.array(itemSchema),
+  conversion_currency: z.string().optional(),
+  conversion_currency_rate: z.number().optional(),
 });
 
 export const FORM_INITIAL_VALUES = {
@@ -44,4 +46,6 @@ export const FORM_INITIAL_VALUES = {
       unit_price: 0,
     },
   ],
+  conversion_currency: '',
+  conversion_currency_rate: 0,
 };

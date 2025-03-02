@@ -22,8 +22,9 @@ const HomePage = () => {
   const rows = projects.map((element) => (
     <Table.Tr key={element.id} onClick={() => onProjectClick(element.id)}>
       <Table.Td>{element.name}</Table.Td>
-      <Table.Td>{element.total_revenue}</Table.Td>
-      <Table.Td>{element.total_payment_owed}</Table.Td>
+      <Table.Td style={{ textAlign: 'center' }}>
+        {element.total_invoices?.[0].count}
+      </Table.Td>
       <Table.Td>
         {dayjs(element.created_at).format('DD/MM/YYYY HH:mm')}
       </Table.Td>
@@ -57,8 +58,9 @@ const HomePage = () => {
               <Table.Thead>
                 <Table.Tr>
                   <Table.Th>Project Name</Table.Th>
-                  <Table.Th>Total Revenue</Table.Th>
-                  <Table.Th>Total Payment Owed</Table.Th>
+                  <Table.Th style={{ textAlign: 'center' }}>
+                    Total Invoices
+                  </Table.Th>
                   <Table.Th>Created At</Table.Th>
                 </Table.Tr>
               </Table.Thead>

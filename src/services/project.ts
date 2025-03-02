@@ -26,7 +26,6 @@ export const createProject = async (params: CreateProjectParams) => {
     throw new Error(error.message);
   }
 
-  console.log('Inserted data:', data);
   return data;
 };
 
@@ -38,6 +37,7 @@ type Project = {
   total_revenue?: number;
   total_payment_owed?: number;
   created_at: string;
+  total_invoices?: { count: number }[];
 };
 
 export const getProjects = async () => {
@@ -49,14 +49,25 @@ export const getProjects = async () => {
 
   const { data, error } = await supabase
     .from('project')
-    .select('*')
+    .select(
+      `
+      id,
+      name,
+      total_revenue,
+      total_payment_owed,
+      created_at,
+      project_prefix,
+      total_invoices: invoice(count)
+    `,
+      { count: 'exact' }
+    )
     .eq('user_id', user_id)
     .returns<Project[]>();
+
   if (error) {
     console.error('error', error);
     throw new Error(error.message);
   }
 
-  console.log('data', data);
   return data;
 };

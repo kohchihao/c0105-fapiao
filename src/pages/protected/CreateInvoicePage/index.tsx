@@ -22,6 +22,7 @@ import {
   IconEye,
   IconTrash,
 } from '@tabler/icons-react';
+import BackButton from '../../../components/BackButton';
 import { formatCurrency } from '../../../utils/currency';
 import FormStatus from './components/FormStatus';
 import PreviewInvoice, {
@@ -95,6 +96,9 @@ const CreateInvoicePage = () => {
     <Container px={0}>
       <form onSubmit={form.onSubmit(onSaveInvoice)}>
         <Stack justify="center">
+          <div>
+            <BackButton title="Back to Project" />
+          </div>
           <FormStatus status={formStatus} />
           <Textarea
             label="Description"

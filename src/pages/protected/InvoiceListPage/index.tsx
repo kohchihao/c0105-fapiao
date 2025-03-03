@@ -8,6 +8,7 @@ import {
   Title,
 } from '@mantine/core';
 import dayjs from 'dayjs';
+import BackButton from '../../../components/BackButton';
 import FullPageLoader from '../../../components/FullPageLoader';
 import ServerError from '../../../components/ServerError';
 import useInvoiceListPageViewModel from './viewModel';
@@ -37,12 +38,14 @@ const InvoiceListPage = () => {
   return (
     <Container px={0}>
       <Stack justify="center">
+        <div>
+          <BackButton />
+        </div>
         <Title order={1}>Invoices</Title>
         <Text c="dimmed">A list of invoices belonging to the project.</Text>
         <div>
           <Button onClick={onCreateInvoice}>Create invoice</Button>
         </div>
-
         <Table.ScrollContainer minWidth={500}>
           <Paper withBorder>
             <Table highlightOnHover>

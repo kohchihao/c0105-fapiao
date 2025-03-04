@@ -3,8 +3,9 @@ import { useDisclosure } from '@mantine/hooks';
 import dayjs from 'dayjs';
 import { zodResolver } from 'mantine-form-zod-resolver';
 import { useEffect, useMemo } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { INFLATE_CURRENCY } from '../../../../constants';
+import useAppNavigation from '../../../../hooks/useAppNavigation';
 import useCompany from '../../../../hooks/useCompany';
 import usePayment from '../../../../hooks/usePayment';
 import { FORM_INITIAL_VALUES, invoiceSchema } from '../constant';
@@ -14,7 +15,7 @@ import useSaveInvoice from '../hooks/useSaveInvoice';
 import usePreviewInvoiceModal from './usePreviewInvoiceModal';
 
 const useCreateInvoicePageViewModel = () => {
-  const navigate = useNavigate();
+  const { navigateEditInvoicePage, refreshPage } = useAppNavigation();
   const { projectId: paramProjectId, invoiceId: paramInvoiceId } = useParams();
   const [isOverlayLoadingVisible, { open: showLoading, close: hideLoading }] =
     useDisclosure(false);
@@ -89,11 +90,12 @@ const useCreateInvoicePageViewModel = () => {
   const saveInvoice = useSaveInvoice({
     invoiceId,
     onSuccessNavigate: (params) => {
-      navigate(
-        `/app/project/${params.project_id}/invoice/${params.invoice_id}/edit`,
-        { replace: true }
-      );
-      navigate(0);
+      navigateEditInvoicePage({
+        projectId: String(params.project_id),
+        invoiceId: String(params.invoice_id),
+        options: { replace: true },
+      });
+      refreshPage();
     },
     hideLoading,
   });

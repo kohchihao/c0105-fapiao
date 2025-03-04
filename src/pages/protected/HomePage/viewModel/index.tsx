@@ -1,14 +1,14 @@
-import { useNavigate } from 'react-router-dom';
+import useAppNavigation from '../../../../hooks/useAppNavigation';
 import useProjects from '../hooks/useProjects';
 import useCreateProjectModal from './useCreateProjectModal';
 
 const useHomePageViewModel = () => {
   const { data: projects = [], isError, isLoading } = useProjects();
   const createProjectModal = useCreateProjectModal();
-  const navigate = useNavigate();
+  const { navigateInvoiceListPage } = useAppNavigation();
 
   const onProjectClick = (projectId: number) => {
-    navigate(`/app/project/${projectId}`);
+    navigateInvoiceListPage({ projectId: String(projectId) });
   };
 
   return {

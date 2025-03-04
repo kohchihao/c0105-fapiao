@@ -1,7 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 import Providers from '../Providers.tsx';
-import AuthProtectedRoute from './AuthProtectedRoute.tsx';
 
 import { ROUTES } from '../constants/index.ts';
 import NotFoundPage from '../pages/NotFoundPage/index.tsx';
@@ -10,42 +9,50 @@ import ProtectedHomePage from '../pages/protected/HomePage/index.tsx';
 import InvoiceListPage from '../pages/protected/InvoiceListPage/index.tsx';
 import SettingsPage from '../pages/protected/SettingsPage/index.tsx';
 import HomePage from '../pages/public/HomePage/index.tsx';
+import AuthenticatedLayout from './AuthenticatedLayout.tsx';
+import PublicLayout from './PublicLayout.tsx';
 
 const router = createBrowserRouter([
   // I recommend you reflect the routes here in the pages folder
   {
-    path: ROUTES.PUBLIC.HOME,
+    path: ROUTES.HOME,
     element: <Providers />,
     children: [
       // Public routes
       {
-        path: ROUTES.PUBLIC.HOME,
-        element: <HomePage />,
+        path: ROUTES.LOGIN,
+        element: <PublicLayout />,
+        children: [
+          {
+            path: ROUTES.LOGIN,
+            element: <HomePage />,
+          },
+        ],
       },
 
       // Auth Protected routes
       {
-        path: ROUTES.PUBLIC.HOME,
-        element: <AuthProtectedRoute />,
+        path: ROUTES.HOME,
+        element: <AuthenticatedLayout />,
         children: [
           {
-            path: ROUTES.PROTECTED.HOME,
+            path: ROUTES.HOME,
             element: <ProtectedHomePage />,
           },
           {
-            path: ROUTES.PROTECTED.INVOICE_LIST_PAGE,
+            path: ROUTES.INVOICE_LIST_PAGE,
             element: <InvoiceListPage />,
           },
           {
-            path: ROUTES.PROTECTED.CREATE_INVOICE_PAGE,
+            path: ROUTES.CREATE_INVOICE_PAGE,
             element: <CreateInvoicePage />,
           },
           {
-            path: ROUTES.PROTECTED.EDIT_INVOICE_PAGE,
+            path: ROUTES.EDIT_INVOICE_PAGE,
             element: <CreateInvoicePage />,
           },
           {
-            path: ROUTES.PROTECTED.SETTINGS_PAGE,
+            path: ROUTES.SETTINGS_PAGE,
             element: <SettingsPage />,
           },
         ],

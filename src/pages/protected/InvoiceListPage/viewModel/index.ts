@@ -1,10 +1,12 @@
 import { useMemo } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import useAppNavigation from '../../../../hooks/useAppNavigation';
 import useInvoices from '../hooks/useInvoices';
 
 const useInvoiceListPageViewModel = () => {
-  const navigate = useNavigate();
   const { projectId: paramProjectId } = useParams();
+  const { navigateCreateInvoicePage, navigateEditInvoicePage } =
+    useAppNavigation();
 
   const projectId = useMemo(() => {
     return isNaN(Number(paramProjectId)) ? 0 : Number(paramProjectId);
@@ -19,11 +21,14 @@ const useInvoiceListPageViewModel = () => {
   });
 
   const onCreateInvoice = () => {
-    navigate(`/app/project/${projectId}/invoice/create`);
+    navigateCreateInvoicePage({ projectId: String(projectId) });
   };
 
   const onClickInvoice = (invoiceId: number) => {
-    navigate(`/app/project/${projectId}/invoice/${invoiceId}/edit`);
+    navigateEditInvoicePage({
+      projectId: String(projectId),
+      invoiceId: String(invoiceId),
+    });
   };
 
   return {

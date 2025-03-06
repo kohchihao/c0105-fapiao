@@ -224,7 +224,7 @@ const CreateInvoicePage = () => {
               description="Exchange rate for conversion"
               placeholder="e.g. 1.35"
               decimalScale={4}
-              min={0.0001}
+              min={0}
               step={0.01}
               allowNegative={false}
               {...form.getInputProps('conversion_currency_rate')}

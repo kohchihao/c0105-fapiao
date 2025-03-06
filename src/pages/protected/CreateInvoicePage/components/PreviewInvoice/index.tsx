@@ -143,7 +143,7 @@ export const PreviewInvoiceDocument = ({
               </Text>
             </View>
 
-            {currency && total ? (
+            {currency?.rate && currency?.symbol && total ? (
               <View style={styles.convertedTotalContentContainer}>
                 <Text style={styles.convertTotalText}>{currency.symbol}</Text>
                 <Text

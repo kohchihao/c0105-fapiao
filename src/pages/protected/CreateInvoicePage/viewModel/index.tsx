@@ -1,5 +1,6 @@
 import { useForm } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
+import { pdf } from '@react-pdf/renderer';
 import dayjs from 'dayjs';
 import { zodResolver } from 'mantine-form-zod-resolver';
 import { useEffect, useMemo } from 'react';
@@ -8,6 +9,7 @@ import { INFLATE_CURRENCY } from '../../../../constants';
 import useAppNavigation from '../../../../hooks/useAppNavigation';
 import useCompany from '../../../../hooks/useCompany';
 import usePayment from '../../../../hooks/usePayment';
+import { PreviewInvoiceDocument } from '../components/PreviewInvoice';
 import { FORM_INITIAL_VALUES, invoiceSchema } from '../constant';
 import useInvoice from '../hooks/useInvoice';
 import useNextInvoiceSn from '../hooks/useNextInvoiceSn';
@@ -195,42 +197,81 @@ const useCreateInvoicePageViewModel = () => {
     return options;
   }, [paymentData]);
 
-  const previewInvoiceProps = {
-    invoiceNumber: form.values.invoice_sn,
-    dateIssued: dayjs(form.values.raised_date).format('DD/MM/YYYY'),
-    billTo: {
-      name: form.values.client_person_in_charge,
-      company: form.values.client_company_name,
-      address: form.values.address,
-    },
-    items: form.values.items.map((item) => ({
-      description: item.description,
-      quantity: item.quantity,
-      unitPrice: item.unit_price,
-      amount: item.quantity * item.unit_price,
-    })),
-    total: totalAmount,
-    comment: form.values.comment,
-    company: {
-      name: companyData?.name,
-      address: companyData?.address,
-      uen: companyData?.uen,
-    },
+  const previewInvoiceProps = useMemo(() => {
+    return {
+      invoiceNumber: form.values.invoice_sn,
+      dateIssued: dayjs(form.values.raised_date).format('DD/MM/YYYY'),
+      billTo: {
+        name: form.values.client_person_in_charge,
+        company: form.values.client_company_name,
+        address: form.values.address,
+      },
+      items: form.values.items.map((item) => ({
+        description: item.description,
+        quantity: item.quantity,
+        unitPrice: item.unit_price,
+        amount: item.quantity * item.unit_price,
+      })),
+      total: totalAmount,
+      comment: form.values.comment,
+      company: {
+        name: companyData?.name,
+        address: companyData?.address,
+        uen: companyData?.uen,
+      },
+      paymentOptions,
+      currency: {
+        symbol: form.values.conversion_currency,
+        rate: form.values.conversion_currency_rate,
+      },
+    };
+  }, [
+    companyData?.address,
+    companyData?.name,
+    companyData?.uen,
+    form.values.address,
+    form.values.client_company_name,
+    form.values.client_person_in_charge,
+    form.values.comment,
+    form.values.conversion_currency,
+    form.values.conversion_currency_rate,
+    form.values.invoice_sn,
+    form.values.items,
+    form.values.raised_date,
     paymentOptions,
-    currency: {
-      symbol: form.values.conversion_currency,
-      rate: form.values.conversion_currency_rate,
-    },
-  };
-
-  const pdfFileName = `invoice-${form.values.invoice_sn}-${dayjs(
-    form.values.raised_date
-  ).format('DD/MM/YYYY')}.pdf`;
+    totalAmount,
+  ]);
 
   const onBackClick = () => {
     navigateInvoiceListPage({
       projectId: String(projectId),
     });
+  };
+
+  const onDownload = async () => {
+    const pdfFileName = `invoice-${form.values.invoice_sn}-${dayjs(
+      form.values.raised_date
+    ).format('DD/MM/YYYY')}.pdf`;
+    let url = '';
+    try {
+      const blob = await pdf(
+        <PreviewInvoiceDocument {...previewInvoiceProps} />
+      ).toBlob();
+      url = URL.createObjectURL(blob);
+
+      const response = await fetch(url);
+      const blobData = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blobData);
+
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = pdfFileName;
+      link.click();
+    } catch (error) {
+      console.error('Error in download process:', error);
+    } finally {
+      if (url) URL.revokeObjectURL(url);
+    }
   };
 
   return {
@@ -243,8 +284,8 @@ const useCreateInvoicePageViewModel = () => {
     isOverlayLoadingVisible,
     previewInvoiceProps,
     totalAmount,
-    pdfFileName,
     onBackClick,
+    onDownload,
   };
 };
 

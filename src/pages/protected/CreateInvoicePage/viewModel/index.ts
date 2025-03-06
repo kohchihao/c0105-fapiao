@@ -15,7 +15,8 @@ import useSaveInvoice from '../hooks/useSaveInvoice';
 import usePreviewInvoiceModal from './usePreviewInvoiceModal';
 
 const useCreateInvoicePageViewModel = () => {
-  const { navigateEditInvoicePage, refreshPage } = useAppNavigation();
+  const { navigateEditInvoicePage, refreshPage, navigateInvoiceListPage } =
+    useAppNavigation();
   const { projectId: paramProjectId, invoiceId: paramInvoiceId } = useParams();
   const [isOverlayLoadingVisible, { open: showLoading, close: hideLoading }] =
     useDisclosure(false);
@@ -226,6 +227,12 @@ const useCreateInvoicePageViewModel = () => {
     form.values.raised_date
   ).format('DD/MM/YYYY')}.pdf`;
 
+  const onBackClick = () => {
+    navigateInvoiceListPage({
+      projectId: String(projectId),
+    });
+  };
+
   return {
     form,
     onAddLineItem,
@@ -237,6 +244,7 @@ const useCreateInvoicePageViewModel = () => {
     previewInvoiceProps,
     totalAmount,
     pdfFileName,
+    onBackClick,
   };
 };
 

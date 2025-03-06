@@ -14,8 +14,14 @@ import ServerError from '../../../components/ServerError';
 import useInvoiceListPageViewModel from './viewModel';
 
 const InvoiceListPage = () => {
-  const { invoices, isLoading, isError, onCreateInvoice, onClickInvoice } =
-    useInvoiceListPageViewModel();
+  const {
+    invoices,
+    isLoading,
+    isError,
+    onCreateInvoice,
+    onClickInvoice,
+    onBackClick,
+  } = useInvoiceListPageViewModel();
 
   const rows = invoices.map((element) => (
     <Table.Tr key={element.id} onClick={() => onClickInvoice(element.id)}>
@@ -39,7 +45,7 @@ const InvoiceListPage = () => {
     <Container px={0}>
       <Stack justify="center">
         <div>
-          <BackButton />
+          <BackButton onClick={onBackClick} />
         </div>
         <Title order={1}>Invoices</Title>
         <Text c="dimmed">A list of invoices belonging to the project.</Text>

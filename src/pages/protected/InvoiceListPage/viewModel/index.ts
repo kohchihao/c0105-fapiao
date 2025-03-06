@@ -5,7 +5,7 @@ import useInvoices from '../hooks/useInvoices';
 
 const useInvoiceListPageViewModel = () => {
   const { projectId: paramProjectId } = useParams();
-  const { navigateCreateInvoicePage, navigateEditInvoicePage } =
+  const { navigateCreateInvoicePage, navigateEditInvoicePage, navigateHome } =
     useAppNavigation();
 
   const projectId = useMemo(() => {
@@ -31,12 +31,17 @@ const useInvoiceListPageViewModel = () => {
     });
   };
 
+  const onBackClick = () => {
+    navigateHome({});
+  };
+
   return {
     invoices,
     isError,
     isLoading,
     onCreateInvoice,
     onClickInvoice,
+    onBackClick,
   };
 };
 

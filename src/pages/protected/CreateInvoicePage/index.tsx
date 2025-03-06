@@ -42,6 +42,7 @@ const CreateInvoicePage = () => {
     previewInvoiceProps,
     totalAmount,
     pdfFileName,
+    onBackClick,
   } = useCreateInvoicePageViewModel();
 
   const rows = form.getValues().items.map((element, index) => {
@@ -97,7 +98,7 @@ const CreateInvoicePage = () => {
       <form onSubmit={form.onSubmit(onSaveInvoice)}>
         <Stack justify="center">
           <div>
-            <BackButton title="Back to Project" />
+            <BackButton title="Back to Project" onClick={onBackClick} />
           </div>
           <FormStatus status={formStatus} />
           <Textarea

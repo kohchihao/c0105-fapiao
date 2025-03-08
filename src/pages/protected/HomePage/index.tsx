@@ -12,14 +12,23 @@ import {
 } from '@mantine/core';
 import dayjs from 'dayjs';
 import FullPageLoader from '../../../components/FullPageLoader';
+import SearchInput from '../../../components/SearchInput';
 import ServerError from '../../../components/ServerError';
 import useHomePageViewModel from './viewModel';
 
 const HomePage = () => {
-  const { projects, isError, isLoading, createProjectModal, onProjectClick } =
-    useHomePageViewModel();
+  const {
+    isError,
+    isLoading,
+    createProjectModal,
+    onProjectClick,
+    results,
+    onSearchChange,
+    onClearSearch,
+    query,
+  } = useHomePageViewModel();
 
-  const rows = projects.map((element) => (
+  const rows = results.map((element) => (
     <Table.Tr key={element.id} onClick={() => onProjectClick(element.id)}>
       <Table.Td>{element.name}</Table.Td>
       <Table.Td style={{ textAlign: 'center' }}>
@@ -51,6 +60,13 @@ const HomePage = () => {
             Create project
           </Button>
         </div>
+
+        <SearchInput
+          value={query}
+          placeholder="Search project name"
+          onChange={onSearchChange}
+          onClear={onClearSearch}
+        />
 
         <Table.ScrollContainer minWidth={500}>
           <Paper withBorder>

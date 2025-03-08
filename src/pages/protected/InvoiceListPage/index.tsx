@@ -10,6 +10,7 @@ import {
 import dayjs from 'dayjs';
 import BackButton from '../../../components/BackButton';
 import FullPageLoader from '../../../components/FullPageLoader';
+import SearchInput from '../../../components/SearchInput';
 import ServerError from '../../../components/ServerError';
 import useInvoiceListPageViewModel from './viewModel';
 
@@ -21,6 +22,9 @@ const InvoiceListPage = () => {
     onCreateInvoice,
     onClickInvoice,
     onBackClick,
+    query,
+    onSearchChange,
+    onClearSearch,
   } = useInvoiceListPageViewModel();
 
   const rows = invoices.map((element) => (
@@ -52,6 +56,14 @@ const InvoiceListPage = () => {
         <div>
           <Button onClick={onCreateInvoice}>Create invoice</Button>
         </div>
+
+        <SearchInput
+          value={query}
+          placeholder="Search invoice sn, description"
+          onChange={onSearchChange}
+          onClear={onClearSearch}
+        />
+
         <Table.ScrollContainer minWidth={500}>
           <Paper withBorder>
             <Table highlightOnHover>
